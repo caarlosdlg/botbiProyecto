@@ -26,6 +26,9 @@ const locationData = {
   }
 };
 
+// Actualizar con una API key válida de Google Maps
+const GOOGLE_MAPS_API_KEY = 'AIzaSyAdt9kEbALdED6sjEnEpDJcg0dAhropseg';
+
 export default function Clients() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -43,18 +46,70 @@ export default function Clients() {
   // Get neighborhoods for selected city
   const neighborhoods = selectedCity ? locationData[selectedCountry][selectedState][selectedCity] : [];
 
+  const getCoordinates = async (address) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}&region=mx&language=es&key=${GOOGLE_MAPS_API_KEY}`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      
+      if (data.status === 'ZERO_RESULTS') {
+        throw new Error('Dirección no encontrada');
+      }
+
+      if (data.status !== 'OK') {
+        console.error('Google Maps API response:', data);
+        throw new Error('Error al obtener las coordenadas');
+      }
+
+      const { lat, lng } = data.results[0].geometry.location;
+      console.log('Coordenadas encontradas:', { lat, lng });
+      return { latitude: lat, longitude: lng };
+    } catch (error) {
+      console.error('Error al obtener coordenadas:', error);
+      // En caso de error, retornamos coordenadas por defecto de México
+      return {
+        latitude: 23.634501,
+        longitude: -102.552784
+      };
+    }
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     setError('');
     try {
+      const fullAddress = `${data.street} ${data.number}, ${data.neighborhood}, ${selectedCity}, ${selectedState}, ${selectedCountry} ${data.postalCode}`;
+      console.log('Buscando coordenadas para:', fullAddress);
+
+      let coordinates;
+      try {
+        coordinates = await getCoordinates(fullAddress);
+      } catch (error) {
+        console.warn('Error al obtener coordenadas:', error);
+        coordinates = {
+          latitude: 23.634501,
+          longitude: -102.552784
+        };
+      }
+
       const addressData = {
-        street: data.street || '',
+        street: data.street,
+        number: data.number,
         neighborhood: data.neighborhood,
         city: selectedCity,
         state: selectedState,
         country: selectedCountry,
         postalCode: data.postalCode,
-        fullAddress: `${data.street || ''}, ${data.neighborhood}, ${selectedCity}, ${selectedState}, ${selectedCountry}`
+        fullAddress,
+        coordinates
       };
 
       const clientData = {
@@ -70,7 +125,7 @@ export default function Clients() {
       setSuccess(true);
       reset();
     } catch (error) {
-      setError(error.message);
+      setError(`Error: ${error.message}`);
       console.error('Error adding client:', error);
     } finally {
       setLoading(false);
