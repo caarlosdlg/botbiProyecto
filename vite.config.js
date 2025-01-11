@@ -2,10 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: '/botbiProyecto/', // Ensure this is the correct repository name
+  base: '/botbiProyecto/',
   plugins: [react()],
   build: {
-    chunkSizeWarningLimit: 1000, // Adjust the chunk size limit
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -14,6 +14,13 @@ export default defineConfig({
           }
         }
       }
+    }
+  },
+  server: {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Permissions-Policy': 'interest-cohort=()',
+      'Cache-Control': 'max-age=600'
     }
   }
 });
