@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: '/botbiProyecto/', // Add this line
+  base: '/botbiProyecto/', // Ensure this is the correct repository name
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 1000, // Adjust the chunk size limit
