@@ -3,28 +3,16 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
-import botbiLogo from '../assets/botbiLogo.png';
+import botbiLogo2 from '../assets/botbiLogo2.png';
+import neighborhoods from '../data/neighborhoods';
 
 // Add location data
 const locationData = {
-  México: {
-    Coahuila: {
-      Torreón: ['Centro', 'Nueva Los Ángeles', 'Campestre La Rosita', 'La amistad'],
-      Saltillo: ['Centro', 'Valle Real', 'Lomas de Lourdes'],
-      Monclova: ['Centro', 'Guadalupe', 'San Miguel']
-    },
-    'Nuevo León': {
-      Monterrey: ['Centro', 'Del Valle', 'Cumbres'],
-      'San Pedro': ['Del Valle', 'San Agustín', 'Carrizalejo'],
-      Guadalupe: ['Linda Vista', 'Contry', 'Las Quintas']
-    },
-    Durango: {
-      'Gómez Palacio': ['Centro', 'Filadelfia', 'San Alberto'],
-      Durango: ['Centro', 'Jardines', 'Las Alamedas'],
-      Lerdo: ['Centro', 'Villa Jardín', 'César Guillermo']
-    }
-  }
+  México: neighborhoods
 };
+
+// Actualizar con una API key válida de Google Maps
+const GOOGLE_MAPS_API_KEY = 'AIzaSyAdt9kEbALdED6sjEnEpDJcg0dAhropseg';
 
 export default function Clients() {
   const [loading, setLoading] = useState(false);
@@ -43,18 +31,70 @@ export default function Clients() {
   // Get neighborhoods for selected city
   const neighborhoods = selectedCity ? locationData[selectedCountry][selectedState][selectedCity] : [];
 
+  const getCoordinates = async (address) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}&region=mx&language=es&key=${GOOGLE_MAPS_API_KEY}`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      
+      if (data.status === 'ZERO_RESULTS') {
+        throw new Error('Dirección no encontrada');
+      }
+
+      if (data.status !== 'OK') {
+        console.error('Google Maps API response:', data);
+        throw new Error('Error al obtener las coordenadas');
+      }
+
+      const { lat, lng } = data.results[0].geometry.location;
+      console.log('Coordenadas encontradas:', { lat, lng });
+      return { latitude: lat, longitude: lng };
+    } catch (error) {
+      console.error('Error al obtener coordenadas:', error);
+      // En caso de error, retornamos coordenadas por defecto de México
+      return {
+        latitude: 23.634501,
+        longitude: -102.552784
+      };
+    }
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     setError('');
     try {
+      const fullAddress = `${data.street} ${data.number}, ${data.neighborhood}, ${selectedCity}, ${selectedState}, ${selectedCountry} ${data.postalCode}`;
+      console.log('Buscando coordenadas para:', fullAddress);
+
+      let coordinates;
+      try {
+        coordinates = await getCoordinates(fullAddress);
+      } catch (error) {
+        console.warn('Error al obtener coordenadas:', error);
+        coordinates = {
+          latitude: 23.634501,
+          longitude: -102.552784
+        };
+      }
+
       const addressData = {
-        street: data.street || '',
+        street: data.street,
+        number: data.number,
         neighborhood: data.neighborhood,
         city: selectedCity,
         state: selectedState,
         country: selectedCountry,
         postalCode: data.postalCode,
-        fullAddress: `${data.street || ''}, ${data.neighborhood}, ${selectedCity}, ${selectedState}, ${selectedCountry}`
+        fullAddress,
+        coordinates
       };
 
       const clientData = {
@@ -70,7 +110,7 @@ export default function Clients() {
       setSuccess(true);
       reset();
     } catch (error) {
-      setError(error.message);
+      setError(`Error: ${error.message}`);
       console.error('Error adding client:', error);
     } finally {
       setLoading(false);
@@ -83,7 +123,7 @@ export default function Clients() {
       <nav className="bg-blue-800 text-white p-4 h-16 flex items-center">
         <div className="flex items-center justify-between w-full">
           <img 
-            src={botbiLogo} 
+            src={botbiLogo2} 
             alt="BotBI Logo" 
             className="w-20 h-auto cursor-pointer -my-6"
             onClick={() => navigate('/')}
