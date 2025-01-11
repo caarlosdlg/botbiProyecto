@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/config';
-import Login from './components/login';
-import MainPage from './components/mainPage';
-import Clients from './components/clients';
-import Dashboard from './components/dashboard';
+import Layout from './components/Layout';
+import Login from './components/Login';
+import Clients from './components/Clients';
+import Dashboard from './components/Dashboard';
+// Remove the import for MainPage
+// import MainPage from './components/MainPage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,15 +27,17 @@ function App() {
   }
 
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-        <Route path="/" element={user ? <MainPage /> : <Navigate to="/login" />} />
-        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/clients" element={user ? <Clients /> : <Navigate to="/login" />} />
-        <Route path="/clients/edit/:id" element={user ? <Clients /> : <Navigate to="/login" />} />
+        <Route element={user ? <Layout /> : <Navigate to="/login" />}>
+          {/* Add a default route for the root path */}
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/clients" element={<Clients />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

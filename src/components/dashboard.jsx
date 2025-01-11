@@ -2,12 +2,32 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/config';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import botbiLogo from '../assets/botbiLogo.png';
+import botbiLogo2 from '../assets/botbiLogo2.png';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import ClientDetailsModal from './ClientDetailsModal';
+
+// Fix Leaflet default icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+const DEFAULT_COORDINATES = {
+  lat: 25.5530571,  // Updated to Torreón coordinates
+  lng: -103.3606319
+};
 
 export default function Dashboard() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,10 +38,19 @@ export default function Dashboard() {
     try {
       const clientsCollection = collection(db, 'clients');
       const clientsSnapshot = await getDocs(clientsCollection);
-      const clientsList = clientsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const clientsList = clientsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        // Ensure coordinates are properly extracted from Firebase
+        return {
+          id: doc.id,
+          ...data,
+          address: {
+            ...data.address,
+            latitude: data.address?.latitude || DEFAULT_COORDINATES.lat,
+            longitude: data.address?.longitude || DEFAULT_COORDINATES.lng
+          }
+        };
+      });
       setClients(clientsList);
     } catch (error) {
       setError('Error fetching clients');
@@ -43,6 +72,18 @@ export default function Dashboard() {
     }
   };
 
+  const handleRowClick = (client, editing = false) => {
+    setSelectedClient(client);
+    setIsEditing(editing);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedClient(null);
+    fetchClients(); // Refetch clients after closing the modal
+  };
+
   const getAddressString = (client) => {
     if (!client.address) return 'No address provided';
     
@@ -62,12 +103,13 @@ export default function Dashboard() {
       {/* Navbar */}
       <nav className="bg-blue-800 text-white p-4 h-16 flex items-center">
         <div className="flex items-center justify-between w-full">
-          <img 
-            src={botbiLogo} 
-            alt="BotBI Logo" 
-            className="w-20 h-auto cursor-pointer -my-6"
-            onClick={() => navigate('/')}
-          />
+          <button onClick={() => navigate('/')} className="flex justify-center">
+            <img 
+              src={botbiLogo2} 
+              alt="BotBI Logo" 
+              className="w-20 h-auto cursor-pointer -my-6"
+            />
+          </button>
           <h1 className="text-2xl font-bold">Client Dashboard</h1>
           <div className="w-20"></div>
         </div>
@@ -105,7 +147,11 @@ export default function Dashboard() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {clients.map((client) => (
-                  <tr key={client.id}>
+                  <tr 
+                    key={client.id} 
+                    onClick={() => handleRowClick(client)}
+                    className="hover:bg-gray-50 cursor-pointer"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       {client.firstName || ''} {client.lastName || ''}
                     </td>
@@ -120,13 +166,13 @@ export default function Dashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap space-x-2">
                       <button
-                        onClick={() => navigate(`/clients/edit/${client.id}`)}
+                        onClick={(e) => { e.stopPropagation(); handleRowClick(client, true); }}
                         className="text-indigo-600 hover:text-indigo-900 mr-4"
                       >
                         <span className="material-icons">edit</span>
                       </button>
                       <button
-                        onClick={() => handleDelete(client.id)}
+                        onClick={(e) => { e.stopPropagation(); handleDelete(client.id); }}
                         className="text-red-600 hover:text-red-900"
                       >
                         <span className="material-icons">delete</span>
@@ -139,6 +185,15 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Client Details Modal */}
+      {showModal && selectedClient && (
+        <ClientDetailsModal 
+          client={selectedClient} 
+          closeModal={closeModal} 
+          isEditing={isEditing}
+        />
+      )}
     </div>
   );
 }

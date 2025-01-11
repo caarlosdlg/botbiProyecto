@@ -3,27 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
-import botbiLogo from '../assets/botbiLogo.png';
+import botbiLogo2 from '../assets/botbiLogo2.png';
+import neighborhoods from '../data/neighborhoods';
 
 // Add location data
 const locationData = {
-  México: {
-    Coahuila: {
-      Torreón: ['Centro', 'Nueva Los Ángeles', 'Campestre La Rosita', 'La amistad'],
-      Saltillo: ['Centro', 'Valle Real', 'Lomas de Lourdes'],
-      Monclova: ['Centro', 'Guadalupe', 'San Miguel']
-    },
-    'Nuevo León': {
-      Monterrey: ['Centro', 'Del Valle', 'Cumbres'],
-      'San Pedro': ['Del Valle', 'San Agustín', 'Carrizalejo'],
-      Guadalupe: ['Linda Vista', 'Contry', 'Las Quintas']
-    },
-    Durango: {
-      'Gómez Palacio': ['Centro', 'Filadelfia', 'San Alberto'],
-      Durango: ['Centro', 'Jardines', 'Las Alamedas'],
-      Lerdo: ['Centro', 'Villa Jardín', 'César Guillermo']
-    }
-  }
+  México: neighborhoods
 };
 
 // Actualizar con una API key válida de Google Maps
@@ -138,7 +123,7 @@ export default function Clients() {
       <nav className="bg-blue-800 text-white p-4 h-16 flex items-center">
         <div className="flex items-center justify-between w-full">
           <img 
-            src={botbiLogo} 
+            src={botbiLogo2} 
             alt="BotBI Logo" 
             className="w-20 h-auto cursor-pointer -my-6"
             onClick={() => navigate('/')}
