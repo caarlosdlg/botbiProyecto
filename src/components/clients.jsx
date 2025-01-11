@@ -31,6 +31,14 @@ export default function Clients() {
   // Get neighborhoods for selected city
   const neighborhoods = selectedCity ? locationData[selectedCountry][selectedState][selectedCity] : [];
 
+  const phoneValidation = {
+    required: "Phone is required",
+    pattern: {
+      value: /^(\+52\s?)?(\d{10})$/,
+      message: "Phone number must be in the format +52 or 10 digits"
+    }
+  };
+
   const getCoordinates = async (address) => {
     try {
       const response = await fetch(
@@ -128,7 +136,7 @@ export default function Clients() {
             className="w-20 h-auto cursor-pointer -my-6"
             onClick={() => navigate('/')}
           />
-          <h1 className="text-2xl font-bold">Client Management</h1>
+          <h1 className="text-2xl font-bold">Gestion de clientes</h1>
           <div className="w-20"></div> {/* Spacer for alignment */}
         </div>
       </nav>
@@ -136,13 +144,13 @@ export default function Clients() {
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">Add New Client</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">Agrega un nuevo cliente</h2>
           
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               {/* Personal Information */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">First Name</label>
+                <label className="block text-sm font-medium text-gray-700">Nombre(s)</label>
                 <input
                   {...register("firstName", { required: "First name is required" })}
                   placeholder="Carlos"
@@ -152,7 +160,7 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                <label className="block text-sm font-medium text-gray-700">Apellido(s)</label>
                 <input
                   {...register("lastName", { required: "Last name is required" })}
                   placeholder="Delgado"
@@ -166,10 +174,10 @@ export default function Clients() {
                 <input
                   type="email"
                   {...register("email", {
-                    required: "Email is required",
+                    required: "Email es requerido",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address"
+                      message: "Correo invalido"
                     }
                   })}
                   placeholder="carlos@correo.com"
@@ -179,9 +187,9 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone</label>
+                <label className="block text-sm font-medium text-gray-700">Telefono</label>
                 <input
-                  {...register("phone", { required: "Phone is required" })}
+                  {...register("phone", phoneValidation)}
                   placeholder="+52 55 1234 5678"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
@@ -190,9 +198,9 @@ export default function Clients() {
 
               {/* Address Fields */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Street</label>
+                <label className="block text-sm font-medium text-gray-700">Calle</label>
                 <input
-                  {...register("street", { required: "Street is required" })}
+                  {...register("street", { required: "calle es necesaria" })}
                   placeholder="Calle principal 123"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
@@ -200,9 +208,9 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Number</label>
+                <label className="block text-sm font-medium text-gray-700">Numero</label>
                 <input
-                  {...register("number", { required: "Number is required" })}
+                  {...register("number", { required: "Numero es requerido" })}
                   placeholder=" Apt 4B"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
@@ -210,9 +218,9 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Country</label>
+                <label className="block text-sm font-medium text-gray-700">País</label>
                 <select
-                  {...register("country", { required: "Country is required" })}
+                  {...register("country", { required: "País es requerido" })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   onChange={(e) => {
                     setSelectedCountry(e.target.value);
@@ -220,16 +228,16 @@ export default function Clients() {
                     setSelectedCity('');
                   }}
                 >
-                  <option value="">Select Country</option>
+                  <option value="">Selecciona País</option>
                   <option value="México">México</option>
                 </select>
                 {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">State</label>
+                <label className="block text-sm font-medium text-gray-700">Estado</label>
                 <select
-                  {...register("state", { required: "State is required" })}
+                  {...register("state", { required: "Estado es requerido" })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   onChange={(e) => {
                     setSelectedState(e.target.value);
@@ -237,7 +245,7 @@ export default function Clients() {
                   }}
                   disabled={!selectedCountry}
                 >
-                  <option value="">Select State</option>
+                  <option value="">Selecciona Estado</option>
                   {states.map(state => (
                     <option key={state} value={state}>{state}</option>
                   ))}
@@ -246,14 +254,14 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">City</label>
+                <label className="block text-sm font-medium text-gray-700">Ciudad</label>
                 <select
-                  {...register("city", { required: "City is required" })}
+                  {...register("city", { required: "Ciudad es requerido " })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   onChange={(e) => setSelectedCity(e.target.value)}
                   disabled={!selectedState}
                 >
-                  <option value="">Select City</option>
+                  <option value="">Selecciona Ciudad</option>
                   {cities.map(city => (
                     <option key={city} value={city}>{city}</option>
                   ))}
@@ -262,13 +270,13 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Neighborhood</label>
+                <label className="block text-sm font-medium text-gray-700">Colonia</label>
                 <select
-                  {...register("neighborhood", { required: "Neighborhood is required" })}
+                  {...register("neighborhood", { required: "Colonia es requerido" })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   disabled={!selectedCity}
                 >
-                  <option value="">Select Neighborhood</option>
+                  <option value="">Selecciona Colonia</option>
                   {neighborhoods.map(neighborhood => (
                     <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
                   ))}
@@ -277,14 +285,16 @@ export default function Clients() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Postal Code</label>
+                <label className="block text-sm font-medium text-gray-700">Codigo postal</label>
                 <input
-                  {...register("postalCode", { required: "Postal code is required" })}
+                  {...register("postalCode", { required: "Codigo postal es requerido" })}
                   placeholder="2700"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
                 {errors.postalCode && <p className="text-red-500 text-xs mt-1">{errors.postalCode.message}</p>}
               </div>
+
+              
             </div>
 
             {error && (
@@ -295,7 +305,7 @@ export default function Clients() {
 
             {success && (
               <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                Client added successfully!
+                Cliente agregado!
               </div>
             )}
 
@@ -306,7 +316,7 @@ export default function Clients() {
                 loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
               } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
             >
-              {loading ? 'Adding...' : 'Add Client'}
+              {loading ? 'Agregando...' : 'Agregar Cliente'}
             </button>
           </form>
         </div>

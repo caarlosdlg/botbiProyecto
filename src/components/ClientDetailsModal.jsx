@@ -5,7 +5,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 const DEFAULT_COORDINATES = {
-  lat: 23.634501,  // Default coordinates for Mexico
+  lat: 23.634501,  // Coordenadas predeterminadas para México
   lng: -102.552784
 };
 
@@ -48,13 +48,13 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
   };
 
   const getAddressString = (client) => {
-    if (!client.address) return 'No address provided';
+    if (!client.address) return 'Dirección no proporcionada';
     
     const street = client.address.street || '';
     const number = client.address.number || '';
     const city = client.address.city || '';
     
-    return [street, number, city].filter(Boolean).join(', ') || 'No address provided';
+    return [street, number, city].filter(Boolean).join(', ') || 'Dirección no proporcionada';
   };
 
   const getClientCoordinates = (client) => {
@@ -69,7 +69,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
     if (lat && lng) {
       return `${parseFloat(lat).toFixed(7)}, ${parseFloat(lng).toFixed(7)}`;
     }
-    return 'No coordinates available';
+    return 'Coordenadas no disponibles';
   };
 
   return (
@@ -77,7 +77,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">{isEditing ? 'Edit Client' : 'Client Details'}</h2>
+            <h2 className="text-2xl font-bold">{isEditing ? 'Editar Cliente' : 'Detalles del Cliente'}</h2>
             <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
               <span className="material-icons">close</span>
             </button>
@@ -87,7 +87,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-bold">First Name</h3>
+                  <h3 className="font-bold">Nombre</h3>
                   <input
                     type="text"
                     name="firstName"
@@ -98,7 +98,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold">Last Name</h3>
+                  <h3 className="font-bold">Apellido</h3>
                   <input
                     type="text"
                     name="lastName"
@@ -109,7 +109,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold">Email</h3>
+                  <h3 className="font-bold">Correo</h3>
                   <input
                     type="email"
                     name="email"
@@ -120,7 +120,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold">Phone</h3>
+                  <h3 className="font-bold">Teléfono</h3>
                   <input
                     type="text"
                     name="phone"
@@ -131,7 +131,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold">Address</h3>
+                  <h3 className="font-bold">Dirección</h3>
                   {isEditing ? (
                     <>
                       <input
@@ -140,7 +140,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                         value={formData.address?.street || ''}
                         onChange={handleAddressChange}
                         className="w-full px-3 py-2 border rounded-lg mb-2"
-                        placeholder="Street"
+                        placeholder="Calle"
                       />
                       <input
                         type="text"
@@ -148,7 +148,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                         value={formData.address?.number || ''}
                         onChange={handleAddressChange}
                         className="w-full px-3 py-2 border rounded-lg mb-2"
-                        placeholder="Number"
+                        placeholder="Número"
                       />
                       <input
                         type="text"
@@ -156,7 +156,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                         value={formData.address?.city || ''}
                         onChange={handleAddressChange}
                         className="w-full px-3 py-2 border rounded-lg mb-2"
-                        placeholder="City"
+                        placeholder="Ciudad"
                       />
                       <input
                         type="text"
@@ -164,7 +164,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                         value={formData.address?.latitude || ''}
                         onChange={handleAddressChange}
                         className="w-full px-3 py-2 border rounded-lg mb-2"
-                        placeholder="Latitude"
+                        placeholder="Latitud"
                       />
                       <input
                         type="text"
@@ -172,7 +172,7 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                         value={formData.address?.longitude || ''}
                         onChange={handleAddressChange}
                         className="w-full px-3 py-2 border rounded-lg mb-2"
-                        placeholder="Longitude"
+                        placeholder="Longitud"
                       />
                     </>
                   ) : (
@@ -180,13 +180,13 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold">Coordinates</h3>
+                  <h3 className="font-bold">Coordenadas</h3>
                   <p className="text-sm font-mono bg-gray-100 p-2 rounded">
                     {formatCoordinates(client)}
                   </p>
                   {(!client.address?.coordinates?.latitude || !client.address?.coordinates?.longitude) && (
                     <p className="text-sm text-orange-600 mt-1">
-                      Using default location (Mexico City)
+                      Usando ubicación predeterminada (Ciudad de México)
                     </p>
                   )}
                 </div>
@@ -217,14 +217,14 @@ export default function ClientDetailsModal({ client, closeModal, isEditing }) {
                 onClick={closeModal}
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2"
               >
-                Cancel
+                Cancelar
               </button>
               {isEditing && (
                 <button
                   type="submit"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg"
                 >
-                  Save
+                  Guardar Cambios
                 </button>
               )}
             </div>

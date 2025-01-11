@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             className="flex items-center w-full p-3 rounded hover:bg-blue-700 transition-colors"
           >
             <span className="material-icons mr-3">people</span>
-            {isOpen && <span>Clients</span>}
+            {isOpen && <span>Clientes</span>}
           </button>
 
           <button 
@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             className="flex items-center w-full p-3 rounded hover:bg-blue-700 transition-colors"
           >
             <span className="material-icons mr-3">dashboard</span>
-            {isOpen && <span>Dashboard</span>}
+            {isOpen && <span>Panel</span>}
           </button>
 
           <button 
@@ -58,7 +58,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             className="flex items-center w-full p-3 rounded hover:bg-blue-700 transition-colors mt-auto"
           >
             <span className="material-icons mr-3">logout</span>
-            {isOpen && <span>Logout</span>}
+            {isOpen && <span>Cerrar Sesión</span>}
           </button>
         </nav>
       </div>

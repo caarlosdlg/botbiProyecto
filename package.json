@@ -3,15 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://caarlosdlg.github.io/botbiProyecto",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "build:css": "tailwindcss -i ./src/index.css -o ./dist/output.css --watch",
-    "predeploy": "npm run build",
-    "deploy": "vite build && gh-pages -d dist"
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.5",

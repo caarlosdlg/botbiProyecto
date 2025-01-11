@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
 });
 
 const DEFAULT_COORDINATES = {
-  lat: 25.5530571,  // Updated to Torreón coordinates
+  lat: 25.5530571,  // Coordenadas de Torreón
   lng: -103.3606319
 };
 
@@ -28,6 +28,8 @@ export default function Dashboard() {
   const [selectedClient, setSelectedClient] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,22 +55,27 @@ export default function Dashboard() {
       });
       setClients(clientsList);
     } catch (error) {
-      setError('Error fetching clients');
-      console.error('Error fetching clients:', error);
+      setError('Error al obtener los clientes');
+      console.error('Error al obtener los clientes:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (clientId) => {
-    if (window.confirm('Are you sure you want to delete this client?')) {
-      try {
-        await deleteDoc(doc(db, 'clients', clientId));
-        setClients(clients.filter(client => client.id !== clientId));
-      } catch (error) {
-        setError('Error deleting client');
-        console.error('Error deleting client:', error);
-      }
+    setClientToDelete(clientId);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await deleteDoc(doc(db, 'clients', clientToDelete));
+      setClients(clients.filter(client => client.id !== clientToDelete));
+      setShowConfirm(false);
+      setClientToDelete(null);
+    } catch (error) {
+      setError('Error al eliminar el cliente');
+      console.error('Error al eliminar el cliente:', error);
     }
   };
 
@@ -85,17 +92,17 @@ export default function Dashboard() {
   };
 
   const getAddressString = (client) => {
-    if (!client.address) return 'No address provided';
+    if (!client.address) return 'Dirección no proporcionada';
     
     const street = client.address.street || '';
     const number = client.address.number || '';
     const city = client.address.city || '';
     
-    return [street, number, city].filter(Boolean).join(', ') || 'No address provided';
+    return [street, number, city].filter(Boolean).join(', ') || 'Dirección no proporcionada';
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen">Cargando...</div>;
   }
 
   return (
@@ -110,7 +117,7 @@ export default function Dashboard() {
               className="w-20 h-auto cursor-pointer -my-6"
             />
           </button>
-          <h1 className="text-2xl font-bold">Client Dashboard</h1>
+          <h1 className="text-2xl font-bold">Panel de Clientes</h1>
           <div className="w-20"></div>
         </div>
       </nav>
@@ -119,12 +126,12 @@ export default function Dashboard() {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Clients List</h2>
+            <h2 className="text-2xl font-bold">Lista de Clientes</h2>
             <button
               onClick={() => navigate('/clients')}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Add New Client
+              Agregar Nuevo Cliente
             </button>
           </div>
 
@@ -138,11 +145,11 @@ export default function Dashboard() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dirección</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -156,10 +163,10 @@ export default function Dashboard() {
                       {client.firstName || ''} {client.lastName || ''}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {client.email || 'No email'}
+                      {client.email || 'Sin correo'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {client.phone || 'No phone'}
+                      {client.phone || 'Sin teléfono'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {getAddressString(client)}
@@ -169,7 +176,7 @@ export default function Dashboard() {
                         onClick={(e) => { e.stopPropagation(); handleRowClick(client, true); }}
                         className="text-indigo-600 hover:text-indigo-900 mr-4"
                       >
-                        <span className="material-icons">edit</span>
+                        <span className="material-icons">editar</span>
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDelete(client.id); }}
@@ -185,6 +192,30 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
+            <p className="mb-4">¿Estás seguro de que deseas eliminar este cliente?</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Client Details Modal */}
       {showModal && selectedClient && (
