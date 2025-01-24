@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/config';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import botbiLogo2 from '../assets/botbiLogo2.png';
+import logo from '../assets/logo.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -112,7 +112,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between w-full">
           <button onClick={() => navigate('/')} className="flex justify-center">
             <img 
-              src={botbiLogo2} 
+              src={logo} 
               alt="BotBI Logo" 
               className="w-20 h-auto cursor-pointer -my-6"
             />

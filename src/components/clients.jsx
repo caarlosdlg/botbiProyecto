@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
-import botbiLogo2 from '../assets/botbiLogo2.png';
+import logo from '../assets/logo.png';
 import neighborhoods from '../data/neighborhoods';
 
 // Add location data
@@ -24,11 +24,11 @@ export default function Clients() {
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   
-  // Get states for selected country
+
   const states = selectedCountry ? Object.keys(locationData[selectedCountry]) : [];
-  // Get cities for selected state
+
   const cities = selectedState ? Object.keys(locationData[selectedCountry][selectedState]) : [];
-  // Get neighborhoods for selected city
+
   const neighborhoods = selectedCity ? locationData[selectedCountry][selectedState][selectedCity] : [];
 
   const phoneValidation = {
@@ -131,7 +131,7 @@ export default function Clients() {
       <nav className="bg-blue-800 text-white p-4 h-16 flex items-center">
         <div className="flex items-center justify-between w-full">
           <img 
-            src={botbiLogo2} 
+            src={logo} 
             alt="BotBI Logo" 
             className="w-20 h-auto cursor-pointer -my-6"
             onClick={() => navigate('/')}

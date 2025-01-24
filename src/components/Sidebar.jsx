@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
-import botbiLogo2 from '../assets/botbiLogo2.png';
+import logo from '../assets/logo.png';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           <div className="flex flex-col items-center gap-4">
             <button onClick={() => navigate('/')} className="flex justify-center">
               <img 
-                src={botbiLogo2} 
+                src={logo} 
                 alt="BotBI Logo" 
                 className="w-16 h-auto"
               />

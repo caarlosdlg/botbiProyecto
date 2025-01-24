@@ -17,7 +17,11 @@ Esta aplicación permite la gestión de clientes, incluyendo la adición de nuev
 
 1. Clona el repositorio:
    ```sh
+<<<<<<< HEAD
    git clone https://github.com/caarlosdlg/botbiProyecto.git
+=======
+   git clone https://github.com/tu-usuario/tu-repositorio.git
+>>>>>>> ac80de0 (final version)
    ```
 
 2. Navega al directorio del proyecto:
@@ -39,4 +43,8 @@ Esta aplicación permite la gestión de clientes, incluyendo la adición de nuev
    npm run dev
    ```
 
+<<<<<<< HEAD
 6. Abre tu navegador y navega a `(dashifyapp.web.app)` para ver la aplicación en funcionamiento.
+=======
+6. Abre tu navegador y navega a `https://botbiproyecto.web.app/` para ver la aplicación en funcionamiento.
+>>>>>>> ac80de0 (final version)

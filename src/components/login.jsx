@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import botbiLogo from '../assets/botbiLogo.png';
+import logo from '../assets/logo.png';
+
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -44,7 +45,7 @@ export default function Login() {
         <div>
           <img
             className="mx-auto h-24 w-auto"
-            src={botbiLogo}
+            src={logo}
             alt="Botbi Logo"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

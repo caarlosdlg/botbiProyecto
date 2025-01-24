@@ -27,6 +27,11 @@ const neighborhoods = {
       'Contry', 'Jardines de Guadalupe', 'La Alianza', 'La Aurora', 'La Estanzuela',
       'La Fama', 'La Herradura', 'La Joya', 'La Paz', 'La Pastora', 'La Perla',
       'La Purísima', 'Linda Vista', 'Las Quintas', 'Rincón de la Sierra', 'Valle Soleado', 'La Silla'
+    ].sort(),
+    'San Pedro': [
+      'Centro', 'Del Valle', 'San Agustín', 'Valle Oriente', 'Santa Engracia', 'La Fátima',
+      'La Leona', 'La Joya', 'La Herradura', 'La Cima', 'La Loma', 'La Muralla', 'La Cañada',
+      'La Alianza', 'La Aurora', 'La Estanzuela', 'La Fama', 'La Paz', 'La Pastora', 'La Perla'
     ].sort()
   },
   Durango: {
@@ -48,13 +53,13 @@ const neighborhoods = {
       'Santa Tere', 'Santa Fe', 'La Perla', 'Oblatos', 'La Estancia'
     ].sort(),
     'Puerto Vallarta': [
-      'Centro', 'La Zona Romántica', 'Marina Vallarta', 'Fluvial Vallarta', 'Palmares',
-      'Conchas Chinas', 'Las Juntas', 'Ixtapa', 'La Cruz de Huanacaxtle'
+      'Centro', 'Zona Hotelera', 'Marina Vallarta', 'Fluvial Vallarta', 'Las Glorias',
+      'Versalles', 'Las Aralias', 'Los Tules', 'Díaz Ordaz', 'El Pitillal'
     ].sort()
   },
   'Ciudad de México': {
-    CDMX: [
-      'Centro Histórico', 'Coyoacán', 'Polanco', 'Roma', 'Condesa', 'La Del Valle',
+    'Ciudad de México': [
+      'Centro Histórico', 'Coyoacán', 'Polanco', 'Roma', 'Condesa', 'Del Valle',
       'Santa Fe', 'Pedregal', 'San Ángel', 'Nápoles', 'Tlalpan', 'Xochimilco', 'Churubusco'
     ].sort(),
     Iztapalapa: [
