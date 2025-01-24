@@ -4,9 +4,9 @@ import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB78mHklLc5tE9m9Y0GkmwVAZedeOJTtFQ",
-  authDomain: "botbiproyecto.firebaseapp.com",
-  projectId: "botbiproyecto",
-  storageBucket: "botbiproyecto.appspot.com",
+  authDomain: "dashifyapp.firebaseapp.com",
+  projectId: "dashify",
+  storageBucket: "dashifyapp.appspot.com",
   messagingSenderId: "355204536012",
   appId: "1:355204536012:web:d7cfbc552950dd8f01d469"
 };

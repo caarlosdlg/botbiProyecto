@@ -1,5 +1,15 @@
 {
   "projects": {
-    "default": "botbiproyecto"
-  }
+    "default": "dashify"
+  },
+  "targets": {
+    "botbiproyecto": {
+      "hosting": {
+        "dashifyapp": [
+          "dashifyapp"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
