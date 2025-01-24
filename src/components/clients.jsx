@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
-import logo from '../assets/logo.png';
+import botbiLogo2 from '../assets/botbiLogo2.png';
 import neighborhoods from '../data/neighborhoods';
 
 // Add location data
@@ -131,7 +131,7 @@ export default function Clients() {
       <nav className="bg-blue-800 text-white p-4 h-16 flex items-center">
         <div className="flex items-center justify-between w-full">
           <img 
-            src={logo} 
+            src={botbiLogo2} 
             alt="BotBI Logo" 
             className="w-20 h-auto cursor-pointer -my-6"
             onClick={() => navigate('/')}
