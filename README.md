@@ -17,7 +17,7 @@ Esta aplicación permite la gestión de clientes, incluyendo la adición de nuev
 
 1. Clona el repositorio:
    ```sh
-   git clone https://github.com/tu-usuario/tu-repositorio.git
+   git clone https://github.com/caarlosdlg/botbiProyecto.git
    ```
 
 2. Navega al directorio del proyecto:
