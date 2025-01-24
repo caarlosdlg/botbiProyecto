@@ -39,4 +39,4 @@ Esta aplicación permite la gestión de clientes, incluyendo la adición de nuev
    npm run dev
    ```
 
-6. Abre tu navegador y navega a `https://botbiproyecto.web.app/` para ver la aplicación en funcionamiento.
+6. Abre tu navegador y navega a `[dashifyapp.web.app]` para ver la aplicación en funcionamiento.
